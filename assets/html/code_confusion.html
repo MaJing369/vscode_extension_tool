@@ -1,0 +1,79 @@
+<!--
+ * @Description: 代码混淆页面
+ * @Author: 小道
+ * @Date: 2021-06-03 14:00:18
+ * @LastEditors: 小道
+ * @LastEditTime: 2021-06-03 14:51:10
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+    <h1>代码混淆</h1>
+    <hr />
+    <input type="button" onclick="selectFile()" value="选择文件" />
+    <input type="button" onclick="selectDir()" value="选择文件夹" style="margin-left: 30px;" />
+    <hr />
+    <div class="logInfo">
+        <ul id="logList" class="logList">
+        </ul>
+    </div>
+</body>
+
+<script>
+    const vscode = acquireVsCodeApi();
+    //log日志
+    window.addEventListener("message", event => {
+        let msg = event.data;
+        if (msg.command && msg.Text) {
+            let li = document.createElement("li");
+            li.innerHTML = msg.Text;
+
+            if (msg.command == "log") {
+                // li.style.color = "#000000";
+            } else if (msg.command == "err") {
+                li.style.color = "#ff0000";
+            }
+            let logList = document.getElementById('logList');
+            logList.appendChild(li);
+            logList.appendChild(document.createElement("hr"));
+        }
+    })
+
+    function selectFile() {
+        vscode.postMessage({
+            command: 'codeConfusion_select',
+            Text: { type: 0 }
+        })
+    }
+
+    function selectDir() {
+        vscode.postMessage({
+            command: 'codeConfusion_select',
+            Text: { type: 1 }
+        })
+    }
+</script>
+
+<style>
+    body {
+        text-align: center;
+    }
+
+    input {
+        font-size: 24px;
+    }
+
+    .logList {
+        /* background-color: blanchedalmond; */
+        height: 300px;
+        overflow-y: scroll
+    }
+</style>
+
+</html>

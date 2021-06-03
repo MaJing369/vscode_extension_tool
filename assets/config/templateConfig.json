@@ -1,0 +1,56 @@
+{
+    "view":"import { BaseFuiView } from "../../core/base/BaseFuiView";
+
+        /**登录界面*/
+        export class LoginView extends BaseFuiView {
+        
+            protected _ui: fui.UI_loginView;
+        
+            constructor() {
+                super(ViewType.POPUP, "login");
+            }
+        
+            protected init(): void {
+                this._ui = fui.UI_loginView.createInstance();
+                this.addChild(this._ui.displayObject);
+                super.init();
+            }
+        
+            show(showData?): void {
+                super.show();
+            }
+        
+            protected destroy(): void {
+                super.destroy();
+            }
+        }",
+    "control":"import { EventManager } from "../../core/manager/EventManager";
+
+        /**登录逻辑控制类 */
+        export class LoginControl extends core.BaseSingle {
+        
+            private _event: EventManager;
+        
+            constructor() {
+                super()
+                this.initEvents();
+            }
+        
+            private initEvents(): void {
+                this._event = EventManager.getInstance();
+            }
+        }",
+    "model":"/**登录数据类*/
+   export class LoginModel extends core.BaseSingle {
+   
+       constructor() {
+           super();
+       }
+   
+       /**配置初始化 */
+       initCfg(): void {}
+   }",
+   "event":"/**登录事件key*/
+  export class LoginEvents {}"
+
+}
