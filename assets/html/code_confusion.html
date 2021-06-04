@@ -3,7 +3,7 @@
  * @Author: 小道
  * @Date: 2021-06-03 14:00:18
  * @LastEditors: 小道
- * @LastEditTime: 2021-06-03 14:51:10
+ * @LastEditTime: 2021-06-04 20:57:32
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +16,35 @@
 <body>
     <h1>代码混淆</h1>
     <hr />
+    <div class="setting">
+        <b>混淆等级：</b>
+        <input type="button" value="高" style="font-size: 24px; width: 70px;">
+        <input type="button" value="中" style="font-size: 24px; width: 70px; margin-left: 30px;">
+        <input type="button" value="底" style="font-size: 24px; width: 70px; margin-left: 30px;">
+        <div style="display:inline; text-align: right; float: right;">
+            <input type="button" onclick="selectFile()" value="选择文件" />
+            <input type="button" onclick="selectDir()" value="选择文件夹" style="margin-left: 30px;" />
+        </div>
+        <p>
+            ● 高混淆，低性能。 性能将比没有混淆时慢 50-100%<br />
+            ● 中等混淆，最佳性能。 性能将比不进行混淆处理慢 30-35%<br />
+            ● 低混淆，高性能。 性能会比没有混淆略慢
+        </p>
+
+        <div id="custom">
+            <hr />
+            <label title="从输出的混淆代码中删除换行符"><input type="checkbox" id="compact"> compact</input></label>
+            <br />
+            <label title="控制流平坦化"><input type="checkbox" id="controlFlowFlattening">
+                controlFlowFlattening</input></label>
+            <label><input type="number" max="1" min="0" step="0.01" value="0.75" id="controlFlowFlatteningThreshold"
+                    style="margin-left: 30px;">
+                controlFlowFlatteningThreshold</input></label>
+            <br />
+            <label><input type="checkbox" id="deadCodeInjection"> deadCodeInjection</input></label>
+        </div>
+    </div>
+    <hr />
     <input type="button" onclick="selectFile()" value="选择文件" />
     <input type="button" onclick="selectDir()" value="选择文件夹" style="margin-left: 30px;" />
     <hr />
@@ -26,24 +55,52 @@
 </body>
 
 <script>
-    const vscode = acquireVsCodeApi();
+    // const vscode = acquireVsCodeApi();
     //log日志
     window.addEventListener("message", event => {
         let msg = event.data;
         if (msg.command && msg.Text) {
             let li = document.createElement("li");
             li.innerHTML = msg.Text;
-
             if (msg.command == "log") {
                 // li.style.color = "#000000";
             } else if (msg.command == "err") {
                 li.style.color = "#ff0000";
+            } else if (msg.command == "success") {
+                li.style.color = "#3dcb05";
             }
             let logList = document.getElementById('logList');
             logList.appendChild(li);
             logList.appendChild(document.createElement("hr"));
         }
     })
+
+    function tabChange(label) {
+        switch (label) {
+            case "高":
+                document.getElementById('tabInfo').innerText = "高混淆，低性能。 性能将比没有混淆时慢 50-100%";
+                hideCustom();
+                break;
+            case "中":
+                document.getElementById('tabInfo').innerText = "中等混淆，最佳性能。 性能将比不进行混淆处理慢 30-35%";
+                hideCustom();
+                break;
+            case "底":
+                document.getElementById('tabInfo').innerText = "低混淆，高性能。 性能会比没有混淆略慢";
+                hideCustom();
+                break;
+            case "自定义":
+                document.getElementById('tabInfo').innerText = "自由设置";
+                document.getElementById("custom").style.display = "block";//显示
+                break;
+        }
+    }
+
+    function hideCustom() {
+        if (document.getElementById("custom").style.display !== "none") {
+            document.getElementById("custom").style.display = "none";
+        }
+    }
 
     function selectFile() {
         vscode.postMessage({
@@ -58,6 +115,8 @@
             Text: { type: 1 }
         })
     }
+
+
 </script>
 
 <style>
@@ -65,14 +124,27 @@
         text-align: center;
     }
 
+    p {
+        line-height: 40px;
+    }
+
     input {
         font-size: 24px;
+    }
+
+    label {
+        font-weight: bold;
+        line-height: 40px;
     }
 
     .logList {
         /* background-color: blanchedalmond; */
         height: 300px;
         overflow-y: scroll
+    }
+
+    .setting {
+        text-align: left;
     }
 </style>
 

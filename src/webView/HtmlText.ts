@@ -3,7 +3,7 @@
  * @Author: 小道
  * @Date: 2021-06-02 17:33:09
  * @LastEditors: 小道
- * @LastEditTime: 2021-06-03 14:55:32
+ * @LastEditTime: 2021-06-04 18:55:14
  */
 
 /**html文本 */
@@ -183,6 +183,8 @@ export class HtmlText {
                         // li.style.color = "#000000";
                     } else if (msg.command == "err") {
                         li.style.color = "#ff0000";
+                    }else if (msg.command == "success") {
+                        li.style.color = "#3dcb05";
                     }
                     let logList = document.getElementById('logList');
                     logList.appendChild(li);
