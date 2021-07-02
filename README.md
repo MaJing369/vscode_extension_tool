@@ -14,4 +14,7 @@
     - ctrl+3 打开有道翻译
     - ctrl+4 打开代码混淆
 
+- 发布
+    vsce package
+
 

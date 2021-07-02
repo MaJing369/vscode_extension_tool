@@ -9,12 +9,13 @@ import { WebViewManager } from "./WebViewManager";
  * @Author: 小道
  * @Date: 2021-06-03 14:28:02
  * @LastEditors: 小道
- * @LastEditTime: 2021-06-03 14:56:21
+ * @LastEditTime: 2021-06-30 01:20:35
  */
 export class MyWebView {
 
     private _panel: WebviewPanel | null;
     private _label: string | null;
+    private _context: ExtensionContext
 
     get panel(): WebviewPanel | null {
         return this._panel
@@ -22,6 +23,7 @@ export class MyWebView {
 
     constructor(context: ExtensionContext, viewColumn: ViewColumn, label: TAB_MENU) {
         this._label = label;
+        this._context = context;
         this._panel = window.createWebviewPanel("webView", label, viewColumn, { retainContextWhenHidden: true, enableScripts: true });
         this._panel.webview.html = WebViewManager.instance.getHtml(label);
         this._panel.webview.onDidReceiveMessage(this.onMessage.bind(this), undefined, context.subscriptions);
@@ -36,7 +38,7 @@ export class MyWebView {
         let msgData = msg.Text;
         switch (msg.command) {
             case 'codeCreate_outPut': //生成代码模板
-                CodeCreate.instance.onMessage(this._panel!, msgData)
+                CodeCreate.instance.onMessage(this._context, this._panel!, msgData)
                 break;
             case "codeConfusion_select": //代码混淆
                 CodeConfusion.instance.onMessage(this._panel!, msgData)

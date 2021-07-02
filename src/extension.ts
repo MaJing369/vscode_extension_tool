@@ -14,7 +14,6 @@ export function activate(context: vscode.ExtensionContext) {
 		let webView = WebViewManager.instance.openWebView(context, vscode.ViewColumn.Active, label);
 		context.subscriptions.push(webView);
 	}))
-
 	TreeViewProvider.initTreeViewItem();
 
 	// context.subscriptions.push(vscode.commands.registerCommand("itemClick", label => {

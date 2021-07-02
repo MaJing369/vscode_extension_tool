@@ -4,7 +4,7 @@
  * @Author: 小道
  * @Date: 2021-06-02 16:17:54
  * @LastEditors: 小道
- * @LastEditTime: 2021-06-03 15:16:50
+ * @LastEditTime: 2021-07-01 09:15:23
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CodeCreate = void 0;
@@ -22,7 +22,7 @@ class CodeCreate {
         protected _ui: fui.UI_loginView;
     
         constructor() {
-            super(ViewType.POPUP, "login");
+            super(VIEW_TYPE.POPUP, "login");
         }
     
         protected init(): void {
@@ -51,8 +51,14 @@ class CodeCreate {
             this.initEvents();
         }
     
-        private initEvents(): void {
+        protected initEvents(): void {
             this._event = EventManager.getInstance();
+            this._event.on(LoginEvents.OPEN, this.openView, this);
+        }
+    
+        /**打开界面 */
+        private openView():void{
+            this._event.dispatchEvent(GameEvents.OPEN_VIEW, LoginView);
         }
     }`;
         this._model = `/**登录数据类*/
@@ -66,27 +72,40 @@ class CodeCreate {
         initCfg(): void {}
     }`;
         this._events = `/**登录事件key*/
-    export class LoginEvents {}`;
+    export class LoginEvents {
+        /**打开界面*/
+        static readonly OPEN:HashCode = HashCodeUtils.hashCode;
+    }`;
         if (CodeCreate._instance)
             throw "create new class CodeCreate";
     }
     /**导出模板 */
-    onMessage(panel, msgData) {
+    onMessage(context, panel, msgData) {
         console.info("msgData", msgData);
-        if (msgData.modelName == "") {
+        if (msgData.modelName === "") {
             vscode_1.window.showInformationMessage("模块名称未填写");
             return;
         }
-        else if (msgData.modelCN == "") {
+        else if (msgData.modelCN === "") {
             vscode_1.window.showInformationMessage("中文注释未填写");
             return;
         }
-        else if (msgData.author == "") {
+        else if (msgData.author === "") {
             vscode_1.window.showInformationMessage("作者名称未填写");
             return;
         }
         //选择路径
-        vscode_1.window.showOpenDialog({ defaultUri: vscode_1.Uri.file(path_1.join(__filename, "..", "..")), canSelectFolders: true }).then(callData => {
+        let openFSPath;
+        if (vscode_1.workspace.workspaceFolders) {
+            openFSPath = path_1.join(vscode_1.workspace.workspaceFolders[0].uri.fsPath, "src", "game");
+        }
+        else {
+            openFSPath = vscode_1.Uri.file(path_1.join(__dirname, "..", "..", "src", "game")).fsPath;
+        }
+        console.log("curPath", openFSPath);
+        if (!fs.existsSync(openFSPath))
+            openFSPath = vscode_1.Uri.file(path_1.join(__dirname)).fsPath;
+        vscode_1.window.showOpenDialog({ defaultUri: vscode_1.Uri.file(openFSPath), openLabel: "选择保存路径", canSelectFolders: true }).then(callData => {
             if (callData)
                 this.createFile(panel, msgData, callData[0].fsPath);
         });
@@ -116,7 +135,7 @@ class CodeCreate {
     }
     saveFile(name, str, panel, savePath) {
         let lastPath = savePath.substring(0, savePath.lastIndexOf("\\"));
-        if (!fs.statSync(lastPath).isDirectory()) {
+        if (!fs.existsSync(lastPath)) {
             fs.mkdirSync(lastPath);
         }
         fs.writeFile(savePath, str, { encoding: "utf-8" }, (err) => {

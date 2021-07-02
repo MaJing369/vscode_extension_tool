@@ -3,10 +3,10 @@
  * @Author: 小道
  * @Date: 2021-06-02 16:17:54
  * @LastEditors: 小道
- * @LastEditTime: 2021-06-03 15:16:50
+ * @LastEditTime: 2021-07-01 09:15:23
  */
 
-import { Hover, languages, TextDocument, Uri, WebviewPanel, window } from "vscode";
+import { ExtensionContext, Uri, WebviewPanel, window, workspace } from "vscode";
 import * as fs from "fs"
 import { join } from "path";
 
@@ -32,7 +32,7 @@ export class CodeCreate {
         protected _ui: fui.UI_loginView;
     
         constructor() {
-            super(ViewType.POPUP, "login");
+            super(VIEW_TYPE.POPUP, "login");
         }
     
         protected init(): void {
@@ -62,8 +62,14 @@ export class CodeCreate {
             this.initEvents();
         }
     
-        private initEvents(): void {
+        protected initEvents(): void {
             this._event = EventManager.getInstance();
+            this._event.on(LoginEvents.OPEN, this.openView, this);
+        }
+    
+        /**打开界面 */
+        private openView():void{
+            this._event.dispatchEvent(GameEvents.OPEN_VIEW, LoginView);
         }
     }`
 
@@ -79,27 +85,39 @@ export class CodeCreate {
     }`
 
     readonly _events = `/**登录事件key*/
-    export class LoginEvents {}`
+    export class LoginEvents {
+        /**打开界面*/
+        static readonly OPEN:HashCode = HashCodeUtils.hashCode;
+    }`
 
     constructor() {
         if (CodeCreate._instance) throw "create new class CodeCreate";
     }
 
     /**导出模板 */
-    onMessage(panel: WebviewPanel, msgData: MessageData): void {
+    onMessage(context: ExtensionContext, panel: WebviewPanel, msgData: MessageData): void {
         console.info("msgData", msgData);
-        if (msgData.modelName == "") {
+
+        if (msgData.modelName === "") {
             window.showInformationMessage("模块名称未填写");
             return;
-        } else if (msgData.modelCN == "") {
+        } else if (msgData.modelCN === "") {
             window.showInformationMessage("中文注释未填写");
             return;
-        } else if (msgData.author == "") {
+        } else if (msgData.author === "") {
             window.showInformationMessage("作者名称未填写");
             return;
         }
         //选择路径
-        window.showOpenDialog({ defaultUri: Uri.file(join(__filename, "..", "..")), canSelectFolders: true }).then(callData => {
+        let openFSPath: string
+        if (workspace.workspaceFolders) {
+            openFSPath = join(workspace.workspaceFolders[0].uri.fsPath, "src", "game");
+        } else {
+            openFSPath = Uri.file(join(__dirname, "..", "..", "src", "game")).fsPath;
+        }
+        console.log("curPath", openFSPath)
+        if (!fs.existsSync(openFSPath)) openFSPath = Uri.file(join(__dirname)).fsPath;
+        window.showOpenDialog({ defaultUri: Uri.file(openFSPath), openLabel: "选择保存路径", canSelectFolders: true }).then(callData => {
             if (callData) this.createFile(panel, msgData, callData[0].fsPath);
         });
     }
@@ -130,7 +148,7 @@ export class CodeCreate {
 
     private saveFile(name: string, str: string, panel: WebviewPanel, savePath: string): void {
         let lastPath = savePath.substring(0, savePath.lastIndexOf("\\"));
-        if (!fs.statSync(lastPath).isDirectory()) {
+        if (!fs.existsSync(lastPath)) {
             fs.mkdirSync(lastPath);
         }
         fs.writeFile(savePath, str, { encoding: "utf-8" }, (err) => {

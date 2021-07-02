@@ -10,11 +10,12 @@ const WebViewManager_1 = require("./WebViewManager");
  * @Author: 小道
  * @Date: 2021-06-03 14:28:02
  * @LastEditors: 小道
- * @LastEditTime: 2021-06-03 14:56:21
+ * @LastEditTime: 2021-06-30 01:20:35
  */
 class MyWebView {
     constructor(context, viewColumn, label) {
         this._label = label;
+        this._context = context;
         this._panel = vscode_1.window.createWebviewPanel("webView", label, viewColumn, { retainContextWhenHidden: true, enableScripts: true });
         this._panel.webview.html = WebViewManager_1.WebViewManager.instance.getHtml(label);
         this._panel.webview.onDidReceiveMessage(this.onMessage.bind(this), undefined, context.subscriptions);
@@ -30,7 +31,7 @@ class MyWebView {
         let msgData = msg.Text;
         switch (msg.command) {
             case 'codeCreate_outPut': //生成代码模板
-                CodeCreate_1.CodeCreate.instance.onMessage(this._panel, msgData);
+                CodeCreate_1.CodeCreate.instance.onMessage(this._context, this._panel, msgData);
                 break;
             case "codeConfusion_select": //代码混淆
                 CodeConfusion_1.CodeConfusion.instance.onMessage(this._panel, msgData);
