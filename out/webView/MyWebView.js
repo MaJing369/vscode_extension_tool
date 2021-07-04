@@ -4,13 +4,14 @@ exports.MyWebView = void 0;
 const vscode_1 = require("vscode");
 const CodeConfusion_1 = require("../code_confusion/CodeConfusion");
 const CodeCreate_1 = require("../code_create/CodeCreate");
+const ExcelToJson_1 = require("../excelToJson/ExcelToJson");
 const WebViewManager_1 = require("./WebViewManager");
 /*
  * @Description: 界面类
  * @Author: 小道
  * @Date: 2021-06-03 14:28:02
  * @LastEditors: 小道
- * @LastEditTime: 2021-06-30 01:20:35
+ * @LastEditTime: 2021-07-02 23:22:38
  */
 class MyWebView {
     constructor(context, viewColumn, label) {
@@ -35,6 +36,9 @@ class MyWebView {
                 break;
             case "codeConfusion_select": //代码混淆
                 CodeConfusion_1.CodeConfusion.instance.onMessage(this._panel, msgData);
+                break;
+            case "excelToJson": //excelToJson
+                ExcelToJson_1.ExcelToJson.instance.onMessage(this._panel, msgData);
                 break;
         }
     }

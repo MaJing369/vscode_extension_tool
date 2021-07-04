@@ -3,21 +3,17 @@
  * @Author: 小道
  * @Date: 2021-06-01 15:07:32
  * @LastEditors: 小道
- * @LastEditTime: 2021-06-03 14:41:03
+ * @LastEditTime: 2021-07-02 23:19:42
  */
 
 import { ExtensionContext, Uri, ViewColumn, WebviewPanel, window } from "vscode";
 import { TAB_MENU } from "../TreeViewProvider";
-import * as path from "path";
-import { CodeCreate } from "../code_create/CodeCreate";
 import { HtmlText } from "./HtmlText";
 import { MyWebView } from "./MyWebView"
 
 export class WebViewManager {
 
     private static _instance: WebViewManager;
-    /**代码混淆 */
-    private code_confusion_html = ``;
     private _webViewMap: Map<string, MyWebView> = new Map();
 
     constructor() {
@@ -53,6 +49,9 @@ export class WebViewManager {
                 break;
             case TAB_MENU.TRANSLATE_YOUDAO:
                 html = HtmlText.defaultHtml("http://nmt.youdao.com/");
+                break;
+            case TAB_MENU.EXCELTOJSON:
+                html = HtmlText.excelToJson_html
                 break;
             default:
                 html = HtmlText.defaultHtml("https://www.baidu.com/");

@@ -1,0 +1,122 @@
+<!--
+ * @Description: excel转json
+ * @Autor: 小道
+ * @Date: 2021-07-02 21:31:04
+ * @LastEditors: 小道
+ * @LastEditTime: 2021-07-04 21:27:53
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+    <h1>Excel转Json</h1>
+    <h5>*Sheet为关键字请不到使用Sheet来命名</h5>
+    <h5>*如只有一个Sheet则使用表明命名数据key，如多个Sheet请命名每个页签的名称,否则数据将不会导出</h5>
+    <hr />
+    <input type="button" onclick="selectFile()" value="选择文件" />
+    <input type="button" onclick="selectDir()" value="选择文件夹" style="margin-left: 30px;" />
+    <hr />
+    <label><input type="checkbox" name="isMerge" checked>合并文件</input></label>
+    <input type="button" onclick="saveFile()" value="导出" style="margin-left: 30px;" />
+    <hr />
+    <div style="display: inline-flex; width:100%">
+        <h5 style="width: 50%;">导出文件</h5>
+        <h5 style="width: 50%;">过滤文件</h5>
+    </div>
+
+    <hr />
+    <div style="display: inline-flex; width:100%">
+        <ul id="itemList" style="height: 500px; width: 50%; overflow-y: scroll"></ul>
+        <ul id="filterList" style="height: 500px; width: 50%; overflow-y: scroll"></ul>
+    </div>
+</body>
+
+<script>
+    const vscode = acquireVsCodeApi();
+
+    window.addEventListener("message", event => {
+        let msg = event.data;
+        if (!msg.command) return;
+        if (msg.command === "itemList") {
+            let itemList = document.getElementById('itemList');
+            let li = document.createElement("li");
+            li.innerText = msg.text;
+
+            let input = document.createElement("input");
+            input.type = "checkbox";
+            input.checked = msg.select;
+            li.appendChild(input)
+            itemList.appendChild(li);
+        } else if (msg.command === "filterList") {
+            let filterList = document.getElementById('filterList');
+            let li = document.createElement("li");
+            li.innerText = msg.text;
+            filterList.appendChild(li);
+        } else if (msg.command === "clearList") {
+            let itemList = document.getElementById('itemList');
+            let itemLiList = itemList.getElementsByTagName("li")
+            if (itemLiList && itemLiList.length > 0) {
+                while (itemLiList.length > 0) {
+                    itemLiList[0].remove();
+                }
+            }
+
+            let filterList = document.getElementById('filterList');
+            let filterLiList = filterList.getElementsByTagName("li")
+            if (filterLiList && filterLiList.length > 0) {
+                while (filterLiList.length > 0) {
+                    filterLiList[0].remove();
+                }
+            }
+        }
+    })
+
+    function selectFile() {
+        vscode.postMessage({
+            command: 'excelToJson',
+            Text: { type: 0 }
+        })
+    }
+
+    function selectDir() {
+        vscode.postMessage({
+            command: 'excelToJson',
+            Text: { type: 1 }
+        })
+    }
+
+    function saveFile() {
+        let selectList = [];
+        let itemList = document.getElementById('itemList').getElementsByTagName("li");
+        for (let i = 0; i < itemList.length; i++) {
+            let input = itemList[i].getElementsByTagName("input");
+            if (input && input[0].checked) selectList.push(itemList[i].innerText)
+        }
+
+        vscode.postMessage({
+            command: 'excelToJson',
+            Text: { type: 2, list: selectList, merge: document.getElementsByName('isMerge')[0].checked }
+        })
+    }
+</script>
+
+<style>
+    body {
+        text-align: center;
+    }
+
+    p {
+        line-height: 40px;
+    }
+
+    input {
+        font-size: 24px;
+    }
+</style>
+
+</html>

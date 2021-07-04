@@ -3,7 +3,7 @@
  * @Author: 小道
  * @Date: 2021-06-01 14:14:29
  * @LastEditors: 小道
- * @LastEditTime: 2021-06-03 11:55:40
+ * @LastEditTime: 2021-07-02 21:24:10
  */
 
 import { join } from "path";
@@ -17,11 +17,13 @@ export enum TAB_MENU {
     /**有道翻译 */
     TRANSLATE_YOUDAO = "有道翻译",
     /**百度 */
-    BAIDU = "百度搜索"
+    BAIDU = "百度搜索",
+    /**excel转json */
+    EXCELTOJSON = "Excel转Json"
 }
 
 const ITEM_ICON_MAP = new Map<string, string>([[TAB_MENU.CODE_CREATE, "robot.png"], [TAB_MENU.CODE_CONFUSION, "fox.png"],
-[TAB_MENU.TRANSLATE_YOUDAO, "youdao_translate.ico"], [TAB_MENU.BAIDU, "baidu.png"]]);
+[TAB_MENU.TRANSLATE_YOUDAO, "youdao_translate.ico"], [TAB_MENU.BAIDU, "baidu.png"], [TAB_MENU.EXCELTOJSON, "json.png"]]);
 
 /**单项的节点(item)的类 */1
 export class TreeItemNode extends TreeItem {
@@ -60,7 +62,7 @@ export class TreeViewProvider implements TreeDataProvider<TreeItemNode>{
 
     /**给每一项都创建一个 TreeItemNode */
     getChildren(element?: TreeItemNode): ProviderResult<TreeItemNode[]> {
-        return [TAB_MENU.CODE_CREATE, TAB_MENU.BAIDU, TAB_MENU.TRANSLATE_YOUDAO, TAB_MENU.CODE_CONFUSION].map(item => new TreeItemNode(item, TreeItemCollapsibleState.None));
+        return [TAB_MENU.CODE_CREATE, TAB_MENU.BAIDU, TAB_MENU.TRANSLATE_YOUDAO, TAB_MENU.CODE_CONFUSION, TAB_MENU.EXCELTOJSON].map(item => new TreeItemNode(item, TreeItemCollapsibleState.None));
     }
 
     /**初始化 */

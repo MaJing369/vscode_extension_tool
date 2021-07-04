@@ -4,7 +4,7 @@
  * @Author: 小道
  * @Date: 2021-06-01 14:14:29
  * @LastEditors: 小道
- * @LastEditTime: 2021-06-03 11:55:40
+ * @LastEditTime: 2021-07-02 21:24:10
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TreeViewProvider = exports.TreeItemNode = exports.TAB_MENU = void 0;
@@ -20,9 +20,11 @@ var TAB_MENU;
     TAB_MENU["TRANSLATE_YOUDAO"] = "\u6709\u9053\u7FFB\u8BD1";
     /**百度 */
     TAB_MENU["BAIDU"] = "\u767E\u5EA6\u641C\u7D22";
+    /**excel转json */
+    TAB_MENU["EXCELTOJSON"] = "Excel\u8F6CJson";
 })(TAB_MENU = exports.TAB_MENU || (exports.TAB_MENU = {}));
 const ITEM_ICON_MAP = new Map([[TAB_MENU.CODE_CREATE, "robot.png"], [TAB_MENU.CODE_CONFUSION, "fox.png"],
-    [TAB_MENU.TRANSLATE_YOUDAO, "youdao_translate.ico"], [TAB_MENU.BAIDU, "baidu.png"]]);
+    [TAB_MENU.TRANSLATE_YOUDAO, "youdao_translate.ico"], [TAB_MENU.BAIDU, "baidu.png"], [TAB_MENU.EXCELTOJSON, "json.png"]]);
 /**单项的节点(item)的类 */ 1;
 class TreeItemNode extends vscode_1.TreeItem {
     constructor(label, collapsibleState) {
@@ -55,7 +57,7 @@ class TreeViewProvider {
     }
     /**给每一项都创建一个 TreeItemNode */
     getChildren(element) {
-        return [TAB_MENU.CODE_CREATE, TAB_MENU.BAIDU, TAB_MENU.TRANSLATE_YOUDAO, TAB_MENU.CODE_CONFUSION].map(item => new TreeItemNode(item, vscode_1.TreeItemCollapsibleState.None));
+        return [TAB_MENU.CODE_CREATE, TAB_MENU.BAIDU, TAB_MENU.TRANSLATE_YOUDAO, TAB_MENU.CODE_CONFUSION, TAB_MENU.EXCELTOJSON].map(item => new TreeItemNode(item, vscode_1.TreeItemCollapsibleState.None));
     }
     /**初始化 */
     static initTreeViewItem() {

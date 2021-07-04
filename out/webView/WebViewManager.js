@@ -4,7 +4,7 @@
  * @Author: 小道
  * @Date: 2021-06-01 15:07:32
  * @LastEditors: 小道
- * @LastEditTime: 2021-06-03 14:41:03
+ * @LastEditTime: 2021-07-02 23:19:42
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WebViewManager = void 0;
@@ -13,8 +13,6 @@ const HtmlText_1 = require("./HtmlText");
 const MyWebView_1 = require("./MyWebView");
 class WebViewManager {
     constructor() {
-        /**代码混淆 */
-        this.code_confusion_html = ``;
         this._webViewMap = new Map();
         if (WebViewManager._instance)
             throw "create new class WebView";
@@ -48,6 +46,9 @@ class WebViewManager {
                 break;
             case TreeViewProvider_1.TAB_MENU.TRANSLATE_YOUDAO:
                 html = HtmlText_1.HtmlText.defaultHtml("http://nmt.youdao.com/");
+                break;
+            case TreeViewProvider_1.TAB_MENU.EXCELTOJSON:
+                html = HtmlText_1.HtmlText.excelToJson_html;
                 break;
             default:
                 html = HtmlText_1.HtmlText.defaultHtml("https://www.baidu.com/");

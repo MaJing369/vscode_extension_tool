@@ -1,6 +1,7 @@
 import { ExtensionContext, ViewColumn, WebviewPanel, window } from "vscode";
 import { CodeConfusion } from "../code_confusion/CodeConfusion";
 import { CodeCreate } from "../code_create/CodeCreate";
+import { ExcelToJson } from "../excelToJson/ExcelToJson";
 import { TAB_MENU } from "../TreeViewProvider";
 import { WebViewManager } from "./WebViewManager";
 
@@ -9,7 +10,7 @@ import { WebViewManager } from "./WebViewManager";
  * @Author: 小道
  * @Date: 2021-06-03 14:28:02
  * @LastEditors: 小道
- * @LastEditTime: 2021-06-30 01:20:35
+ * @LastEditTime: 2021-07-02 23:22:38
  */
 export class MyWebView {
 
@@ -42,6 +43,9 @@ export class MyWebView {
                 break;
             case "codeConfusion_select": //代码混淆
                 CodeConfusion.instance.onMessage(this._panel!, msgData)
+                break;
+            case "excelToJson": //excelToJson
+                ExcelToJson.instance.onMessage(this._panel!, msgData)
                 break;
         }
     }
