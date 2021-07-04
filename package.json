@@ -2,7 +2,7 @@
 	"name": "tool",
 	"displayName": "项目工具",
 	"description": "项目工具",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"publisher": "xiaodao",
 	"engines": {
 		"vscode": "^1.56.0"

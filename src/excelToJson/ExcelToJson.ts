@@ -8,7 +8,7 @@ import { Uri, WebviewPanel, window } from "vscode";
  * @Autor: 小道
  * @Date: 2021-07-02 21:06:24
  * @LastEditors: 小道
- * @LastEditTime: 2021-07-04 21:35:02
+ * @LastEditTime: 2021-07-04 23:23:22
  */
 export class ExcelToJson {
 
@@ -206,7 +206,7 @@ export class ExcelToJson {
                                 for (let x = 0; x < xData.length; x++) {
                                     jsonData[yData[0][x]] = xData[x];
                                 }
-                                if (jsonData.hasOwnProperty(yData[0][0])) jsonDataArr.push(JSON.stringify(jsonData))
+                                if (jsonData.hasOwnProperty(yData[0][0])) jsonDataArr.push(jsonData)
                             }
 
                             if (jsonDataArr.length > 0) {
@@ -221,7 +221,7 @@ export class ExcelToJson {
                                     }
                                 }
                                 saveFileName = saveFileName.replace(".xlsx", "").replace(".xls", "");
-                                xlsxDates.set(saveFileName, JSON.stringify(jsonDataArr));
+                                xlsxDates.set(saveFileName, jsonDataArr);
                             }
                         }
                     })

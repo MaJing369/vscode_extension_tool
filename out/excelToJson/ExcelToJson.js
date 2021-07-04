@@ -10,7 +10,7 @@ const vscode_1 = require("vscode");
  * @Autor: 小道
  * @Date: 2021-07-02 21:06:24
  * @LastEditors: 小道
- * @LastEditTime: 2021-07-04 21:35:02
+ * @LastEditTime: 2021-07-04 23:23:22
  */
 class ExcelToJson {
     constructor() {
@@ -205,7 +205,7 @@ class ExcelToJson {
                                     jsonData[yData[0][x]] = xData[x];
                                 }
                                 if (jsonData.hasOwnProperty(yData[0][0]))
-                                    jsonDataArr.push(JSON.stringify(jsonData));
+                                    jsonDataArr.push(jsonData);
                             }
                             if (jsonDataArr.length > 0) {
                                 let saveFileName = value.name;
@@ -220,7 +220,7 @@ class ExcelToJson {
                                     }
                                 }
                                 saveFileName = saveFileName.replace(".xlsx", "").replace(".xls", "");
-                                xlsxDates.set(saveFileName, JSON.stringify(jsonDataArr));
+                                xlsxDates.set(saveFileName, jsonDataArr);
                             }
                         }
                     });
